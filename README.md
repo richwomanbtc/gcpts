@@ -1,27 +1,31 @@
-# AWS Athena helper for time series operations
+# GCP time series
 
-## Install
+## Requirements
+- Python 3.10+
 
+## Installation
 ```
-pip install git+https://github.com/yoshiso/athena-timeseries.git -U 
+pip install git+https://github.com/trading-analysis/gcpts.git
 ```
 
-## Useage
+## Test
+```
+poetry run pytest -s -vv
+```
 
-Here is the example to upload OHLC data.
+## Usage
 
-```py
-import athena_timeseries
+```python
+import gcpts
 import pandas as pd
 import numpy as np
-import boto3
 
-boto3_session = boto3.Session(region_name="ap-northeast-1")
 
-tsdb = athena_timeseries.AthenaTimeSeries(
-    boto3_session=boto3_session, 
-    glue_db_name='example_db', 
-    s3_path='s3://example_bucket/example_db_dir',
+
+gcpts_client = gcpts.GCPTS(
+    bucket_name="example_bucket", 
+    project_id="example_project", 
+    dataset_id="example_dataset"
 )
 
 # Prepare example data, your data need to have 3 columns named symbol, dt, partition_dt
@@ -39,12 +43,10 @@ df['dt'] = pd.date_range('2022-01-01', '2022-05-01', freq='15Min')[:5000]
 # Every time, you have to upload all the data for a given partition_dt, otherwise older will be gone.
 df['partition_dt'] = df['dt'].dt.date.map(lambda x: x.replace(day=1))
 
-tsdb.upload(table_name='example_table', df=df)
+gcpts_client.upload(table_name='example_table', df=df)
 ```
 
-Here is the example to query data. You can enjoy time series resampling operations!
-
-```py
+```python
 # Query for raw data.
 raw_clsoe = tsdb.query(
     table_name='example_table',
@@ -67,5 +69,4 @@ resampeld_daily_close = tsdb.resample_query(
 ```
 
 ## Disclaimer
-
-This allow you to have SQL injection. Please use it for your own purpose only and do not allow to put arbitrary requests to this library.
+This allows you to have SQL injection. Please use it for your own purpose only and do not allow putting arbitrary requests to this library.

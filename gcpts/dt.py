@@ -36,7 +36,7 @@ def to_quarter_start_dt(dt: pd.Timestamp, offset: int = 0) -> pd.Timestamp:
     return dt
 
 
-def to_quarter_end_dt(dt: pd.Timestamp, offset: int = 0):
+def to_quarter_end_dt(dt: pd.Timestamp, offset: int = 0) -> pd.Timestamp:
     return to_quarter_start_dt(dt, offset) + pd.offsets.MonthEnd(3)
 
 
