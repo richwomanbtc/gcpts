@@ -3,35 +3,32 @@ import numpy as np
 import pytest
 import os
 from gcpts import GCPTS
-from google.cloud import bigquery, storage
+from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 
 
 @pytest.fixture(scope="session")
-def bucket_name():
-    yield os.environ["BUCKET_NAME"]
-
-
-@pytest.fixture(scope="session")
-def project_id():
-    yield os.environ["PROJECT_ID"]
-
-
-@pytest.fixture(scope="session")
-def dataset_id():
-    yield os.environ["DATASET_ID"]
-
-
-@pytest.fixture(scope="session")
-def gcpts(bucket_name, project_id, dataset_id):
+def gcpts():
+    project_id = os.environ["PROJECT_ID"]
+    dataset_id = os.environ["DATASET_ID"]
     return GCPTS(
-        bucket_name=bucket_name,
         project_id=project_id,
         dataset_id=dataset_id,
     )
 
 
 @pytest.fixture(scope="session")
+def bq_client(gcpts):
+    bq_client = bigquery.Client(gcpts.project_id)
+    yield bq_client
+
+
+@pytest.fixture(scope="session")
+def table_name():
+    yield "test_symbol"
+
+
+@pytest.fixture
 def df():
     df = pd.DataFrame(
         np.random.randn(5000, 4), columns=["open", "high", "low", "close"]
@@ -42,23 +39,14 @@ def df():
     return df
 
 
-@pytest.fixture(scope="session")
-def table_name():
-    yield "test_symbol"
-
-
-@pytest.fixture(scope="session")
-def gcs_client():
-    yield storage.Client()
-
-
 @pytest.fixture(autouse=True, scope="session")
-def delete_after_run(bucket_name, project_id, dataset_id, table_name, gcs_client):
+def delete_after_run(gcpts, table_name, bq_client):
     yield
     print("\ntear down")
-    bq_client = bigquery.Client()
     try:
-        table = bq_client.get_table(f"{project_id}.{dataset_id}.{table_name}")
+        table = bq_client.get_table(
+            f"{gcpts.project_id}.{gcpts.dataset_id}.{table_name}"
+        )
         bq_client.delete_table(table)
         print(f"Table {table.full_table_id} is deleted.")
     except NotFound:
@@ -67,18 +55,9 @@ def delete_after_run(bucket_name, project_id, dataset_id, table_name, gcs_client
     bq_client.close()
 
 
-@pytest.fixture(scope="session")
-def expected_blobs(bucket_name, df):
-
-    yield {
-        f"test_symbol/partition_dt={partition_dt}/symbol=BTCUSDT/part-0.parquet"
-        for partition_dt in df["partition_dt"].unique()
-    }
-
-
-def test_upload_and_create_table(gcpts, df, table_name, gcs_client, expected_blobs):
+def test_upload_and_create_table(gcpts, df, table_name):
     gcpts.upload(table_name, df)
-    bq_client = bigquery.Client(gcpts.project_id)
+
     table = bq_client.get_table(f"{gcpts.project_id}.{gcpts.dataset_id}.{table_name}")
     assert set(table.schema) == {
         bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),

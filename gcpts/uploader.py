@@ -38,14 +38,15 @@ def upsert_table(
         ),
     )
     dates = df["partition_dt"].unique()
+    client = bigquery.Client()
     for date in dates:
         partition_table_id = f"{table_id}${date.strftime('%Y%m%d')}"
-        client = bigquery.Client()
         part_df = df.loc[df["partition_dt"] == date]
         job = client.load_table_from_dataframe(
             part_df, partition_table_id, job_config=job_config
         )
         print(job.result())
+    client.close()
 
 
 class Uploader:

@@ -23,7 +23,6 @@ import numpy as np
 
 
 gcpts_client = gcpts.GCPTS(
-    bucket_name="example_bucket", 
     project_id="example_project", 
     dataset_id="example_dataset"
 )
