@@ -1,5 +1,6 @@
 # GCP time series
-
+<!-- Pytest Coverage Comment:Begin -->
+<!-- Pytest Coverage Comment:End -->
 ## Requirements
 - Python 3.10+
 
