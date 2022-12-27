@@ -11,16 +11,16 @@ from google.cloud.exceptions import NotFound
 def gcpts():
     project_id = os.environ["PROJECT_ID"]
     dataset_id = os.environ["DATASET_ID"]
-    return GCPTS(
-        project_id=project_id,
-        dataset_id=dataset_id,
-    )
+    return GCPTS(project_id=project_id, dataset_id=dataset_id)
 
 
 @pytest.fixture(scope="session")
 def bq_client(gcpts):
-    bq_client = bigquery.Client(gcpts.project_id)
+    bq_client = bigquery.Client(
+        gcpts.project_id,
+    )
     yield bq_client
+    bq_client.close()
 
 
 @pytest.fixture(scope="session")
@@ -39,7 +39,20 @@ def df():
     return df
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture
+def df_vol():
+    df_vol = pd.DataFrame(
+        np.random.randn(5000, 5), columns=["open", "high", "low", "close", "volume"]
+    )
+    df_vol["symbol"] = "BTCUSDT"
+    df_vol["dt"] = pd.date_range("2022-05-01", "2022-10-01", freq="15Min")[:5000]
+    df_vol["partition_dt"] = (
+        df_vol["dt"].dt.date.map(lambda x: x.replace(day=1)).astype(str)
+    )
+    return df_vol
+
+
+@pytest.fixture(autouse=True)
 def delete_after_run(gcpts, table_name, bq_client):
     yield
     print("\ntear down")
@@ -52,22 +65,13 @@ def delete_after_run(gcpts, table_name, bq_client):
     except NotFound:
         pass
 
-    bq_client.close()
 
-
-def test_upload_and_create_table(gcpts, df, table_name):
+def test_upload_and_create_table(gcpts, df, bq_client, table_name):
+    # upload and create table
     gcpts.upload(table_name, df)
 
     table = bq_client.get_table(f"{gcpts.project_id}.{gcpts.dataset_id}.{table_name}")
-    assert set(table.schema) == {
-        bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),
-        bigquery.SchemaField("dt", "DATETIME", mode="NULLABLE"),
-        bigquery.SchemaField("symbol", "STRING", mode="NULLABLE"),
-        bigquery.SchemaField("open", "FLOAT", mode="NULLABLE"),
-        bigquery.SchemaField("high", "FLOAT", mode="NULLABLE"),
-        bigquery.SchemaField("low", "FLOAT", mode="NULLABLE"),
-        bigquery.SchemaField("close", "FLOAT", mode="NULLABLE"),
-    }
+
     result_df = (
         bq_client.query(
             f"SELECT * FROM `{gcpts.project_id}.{gcpts.dataset_id}.{table_name}`"
@@ -86,20 +90,23 @@ def test_upload_and_create_table(gcpts, df, table_name):
         "close",
     }
 
+    assert set(table.schema) == {
+        bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),
+        bigquery.SchemaField("dt", "DATETIME", mode="NULLABLE"),
+        bigquery.SchemaField("symbol", "STRING", mode="NULLABLE"),
+        bigquery.SchemaField("open", "FLOAT", mode="NULLABLE"),
+        bigquery.SchemaField("high", "FLOAT", mode="NULLABLE"),
+        bigquery.SchemaField("low", "FLOAT", mode="NULLABLE"),
+        bigquery.SchemaField("close", "FLOAT", mode="NULLABLE"),
+    }
 
-@pytest.mark.order(after="test_upload_and_create_table")
-def test_upload(gcpts, table_name):
-    df_mod = pd.DataFrame(
-        np.random.randn(5000, 5), columns=["open", "high", "low", "close", "volume"]
-    )
-    df_mod["symbol"] = "BTCUSDT"
-    df_mod["dt"] = pd.date_range("2022-05-01", "2022-10-01", freq="15Min")[:5000]
-    df_mod["partition_dt"] = (
-        df_mod["dt"].dt.date.map(lambda x: x.replace(day=1)).astype(str)
-    )
 
-    gcpts.upload(table_name, df_mod)
-    bq_client = bigquery.Client()
+def test_upload(gcpts, df, df_vol, bq_client, table_name):
+    # upload and create table
+    gcpts.upload(table_name, df)
+    # upload another df
+    gcpts.upload(table_name, df_vol)
+
     table = bq_client.get_table(f"{gcpts.project_id}.{gcpts.dataset_id}.{table_name}")
     assert set(table.schema) == {
         bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),
@@ -129,8 +136,16 @@ def test_upload(gcpts, table_name):
         "close",
         "volume",
     }
+
+
+def test_upload_two_times(gcpts, df, df_vol, bq_client, table_name):
+    # upload and create table
+    gcpts.upload(table_name, df)
+    # upload another df
+    gcpts.upload(table_name, df_vol)
     # test if the data is correct when uploading again
-    gcpts.upload(table_name, df_mod)
+    gcpts.upload(table_name, df_vol)
+
     result_df = (
         bq_client.query(
             f"SELECT * FROM `{gcpts.project_id}.{gcpts.dataset_id}.{table_name}`"
@@ -151,8 +166,10 @@ def test_upload(gcpts, table_name):
     }
 
 
-@pytest.mark.order(after="test_upload_and_create_table")
-def test_query(gcpts, df, table_name):
+def test_basic_query(gcpts, df, df_vol, table_name):
+    gcpts.upload(table_name, df)
+    gcpts.upload(table_name, df_vol)
+
     result_df = gcpts.query(
         table_name,
         "open",
@@ -167,8 +184,10 @@ def test_query(gcpts, df, table_name):
         .unstack()
         .loc[pd.IndexSlice["2022-01-01 00:00:00":"2022-01-15 23:59:59", :]]
     )
+
     pd.testing.assert_frame_equal(result_df, expected_df)
 
+    # volumes before 05/01 have to be nan
     result_df = gcpts.query(
         table_name,
         "volume",
@@ -180,8 +199,10 @@ def test_query(gcpts, df, table_name):
     assert result_df.isna().sum().sum() == len(result_df)
 
 
-@pytest.mark.order(after="test_upload_and_create_table")
-def test_resample_query(gcpts, df, table_name):
+def test_resample_query(gcpts, df, df_vol, table_name):
+    gcpts.upload(table_name, df)
+    gcpts.upload(table_name, df_vol)
+
     result_df = gcpts.resample_query(
         table_name,
         "close",

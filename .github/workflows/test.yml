@@ -1,0 +1,61 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    env:
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      DATASET_ID: ${{ secrets.DATASET_ID }}
+      WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+      SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.2.2
+      - name: Install dependencies
+        run: poetry install
+      - id: "auth"
+        uses: "google-github-actions/auth@v0"
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+      - name: Run tests
+        run: poetry run pytest tests/ --cov --junitxml=pytest.xml --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
+      - name: Create coverage comment
+        id: coverageComment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+            pytest-coverage-path: pytest-coverage.txt
+            junitxml-path: ./pytest.xml
+      - name: Coverage badge
+        uses: tj-actions/coverage-badge-py@v1.8
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v12
+        id: changed_files
+        with:
+          files: coverage.svg
+      - name: Commit files
+        if: steps.changed_files.outputs.files_changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add coverage.svg
+          git commit -m "Updated coverage.svg"
+      - name: Push changes
+        if: steps.changed_files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          branch: ${{ github.ref }}
+
+
+    

@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from typing import List, Optional, Any
 from logging import getLogger
-from google.cloud import bigquery
 import pandas as pd
 from gcpts.protocol import GCPTSProtocol
 
@@ -117,7 +116,6 @@ class ResampleQuery:
         verbose: int = 0,
         offset_repr: Optional[str] = None,
     ):
-        bq_client = bigquery.Client()
         table_id = f"{self.project_id}.{self.dataset_id}.{table_name}"
         inner_stmt = _build_inner_view(
             table_id=table_id,
@@ -148,7 +146,7 @@ class ResampleQuery:
         if verbose > 0:
             print(stmt)
 
-        execute_fn = bq_client.query
+        execute_fn = self.bq_client.query
 
         df = execute_fn(query=stmt).to_dataframe()
 

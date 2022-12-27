@@ -1,5 +1,4 @@
 from typing import Callable, Optional, List
-from google.cloud import bigquery
 import pandas as pd
 from gcpts.protocol import GCPTSProtocol
 from gcpts.dt import (
@@ -87,8 +86,7 @@ class Query:
             condition = " AND ".join(where)
             stmt += f" WHERE {condition}"
 
-        bq_client = bigquery.Client()
-        df = bq_client.query(stmt).to_dataframe()
+        df = self.bq_client.query(stmt).to_dataframe()
 
         df["dt"] = pd.to_datetime(df["dt"])
 
