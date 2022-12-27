@@ -50,11 +50,16 @@ jobs:
         run: |
           sed -i '/<!-- Pytest Coverage Comment:Begin -->/,/<!-- Pytest Coverage Comment:End -->/c\<!-- Pytest Coverage Comment:Begin -->\n\${{ steps.coverageComment.outputs.coverageHtml }}\n<!-- Pytest Coverage Comment:End -->' ./README.md
 
-      - name: Commit & Push changes to Readme
-        uses: actions-js/push@master
+      - name: Commit files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          git commit -m "[bot] Update coverage on README.md"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          message: Update coverage on Readme
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          directory: "README.md"
+          branch: ${{ github.head_ref }}
 
     
