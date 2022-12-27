@@ -7,6 +7,9 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: "read"
+      id-token: "write"
     env:
       PROJECT_ID: ${{ secrets.PROJECT_ID }}
       DATASET_ID: ${{ secrets.DATASET_ID }}
