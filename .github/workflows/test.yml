@@ -4,6 +4,8 @@ on:
   push:
     branches: 
       - main
+    paths-ignore:
+      - "README.md"
 
 jobs:
   test:
@@ -34,33 +36,21 @@ jobs:
           service_account: ${{ env.SERVICE_ACCOUNT }}
       - name: Run tests
         run: poetry run pytest tests/ --cov --junitxml=pytest.xml --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
-      - name: Create coverage comment
+      - name: Pytest coverage comment
         id: coverageComment
         uses: MishaKav/pytest-coverage-comment@main
         with:
-            pytest-coverage-path: pytest-coverage.txt
-            junitxml-path: ./pytest.xml
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Coverage badge
-        uses: tj-actions/coverage-badge-py@v1.8
-      - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v12
-        id: changed_files
-        with:
-          files: coverage.svg
-      - name: Commit files
-        if: steps.changed_files.outputs.files_changed == 'true'
+          hide-comment: true
+          pytest-coverage-path: ./pytest-coverage.txt
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update Readme with Coverage Html
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add coverage.svg
-          git commit -m "Updated coverage.svg"
-      - name: Push changes
-        if: steps.changed_files.outputs.files_changed == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.github_token }}
-          branch: ${{ github.ref }}
+          sed -i '/<!-- Pytest Coverage Comment:Begin -->/,/<!-- Pytest Coverage Comment:End -->/c\<!-- Pytest Coverage Comment:Begin -->\n\${{ steps.coverageComment.outputs.coverageHtml }}\n<!-- Pytest Coverage Comment:End -->' ./README.md
 
+      - name: Commit & Push changes to Readme
+        uses: actions-js/push@master
+        with:
+          message: Update coverage on Readme
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
     
