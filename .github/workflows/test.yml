@@ -38,13 +38,13 @@ jobs:
           workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
       - name: Run tests
-        run: poetry run pytest tests/ --cov --junitxml=pytest.xml --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
+        run: poetry run pytest tests/ --cov --junitxml=./tests/pytest.xml --cov-report=term-missing:skip-covered | tee ./tests/pytest-coverage.txt
       - name: Pytest coverage comment
         id: coverageComment
         uses: MishaKav/pytest-coverage-comment@main
         with:
           hide-comment: true
-          pytest-coverage-path: ./pytest-coverage.txt
+          pytest-coverage-path: ./tests/pytest-coverage.txt
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Readme with Coverage Html
         run: |
@@ -54,8 +54,8 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add README.md
-          git commit -m "[bot] Update coverage on README.md"
+          git add README.md ./tests/pytest.xml ./tests/pytest-coverage.txt
+          git commit -m "Update coverage on README.md"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
