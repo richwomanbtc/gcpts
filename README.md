@@ -5,7 +5,7 @@
 
 ## Installation
 ```
-pip install git+https://github.com/trading-analysis/gcpts.git
+pip install git+https://github.com/richwomanbtc/gcpts.git
 ```
 
 ## Test
