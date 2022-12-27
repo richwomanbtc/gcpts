@@ -12,7 +12,7 @@ jobs:
       DATASET_ID: ${{ secrets.DATASET_ID }}
       WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
       SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
