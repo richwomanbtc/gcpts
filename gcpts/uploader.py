@@ -8,7 +8,7 @@ from google.cloud import bigquery
 def upsert_table(
     self: GCPTSProtocol,
     df: pd.DataFrame,
-    table: str,
+    table_name: str,
     dtypes: Optional[Dict[str, str]] = None,
 ) -> None:
     _dtypes = {
@@ -28,7 +28,7 @@ def upsert_table(
     df = df.astype(_dtypes)
     df["partition_dt"] = df["partition_dt"].dt.date
 
-    table_id = f"{self.project_id}.{self.dataset_id}.{table}"
+    table_id = f"{self.project_id}.{self.dataset_id}.{table_name}"
     job_config = bigquery.LoadJobConfig(
         autodetect=True,
         write_disposition="WRITE_TRUNCATE",
