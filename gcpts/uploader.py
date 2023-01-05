@@ -51,8 +51,8 @@ def upsert_table(
 class Uploader:
     def upload(
         self: GCPTSProtocol,
-        table: str,
+        table_name: str,
         df: pd.DataFrame,
         dtype: Optional[Dict[str, str]] = None,
     ):
-        upsert_table(self, df, table, dtype)
+        upsert_table(self, df, table_name, dtype)

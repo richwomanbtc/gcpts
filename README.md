@@ -49,7 +49,7 @@ gcpts_client.upload(table_name='example_table', df=df)
 
 ```python
 # Query for raw data.
-raw_clsoe = tsdb.query(
+raw_clsoe = gcpts_client.query(
     table_name='example_table',
     field='close',
     start_dt='2022-02-01 00:00:00', # yyyy-mm-dd HH:MM:SS, inclusive
@@ -58,7 +58,7 @@ raw_clsoe = tsdb.query(
 )
 
 # Query for raw data with resampling
-resampeld_daily_close = tsdb.resample_query(
+resampeld_daily_close = gcpts_client.resample_query(
     table_name='example_table',
     field='close',
     start_dt='2022-01-01 00:00:00', # yyyy-mm-dd HH:MM:SS, inclusive
