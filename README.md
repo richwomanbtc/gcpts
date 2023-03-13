@@ -1,6 +1,6 @@
 # GCP time series
 
-
+[![codecov](https://codecov.io/gh/richwomanbtc/gcpts/branch/main/graph/badge.svg?token=J728V34ZR5)](https://codecov.io/gh/richwomanbtc/gcpts)
 
 ## Requirements
 - Python 3.10+
