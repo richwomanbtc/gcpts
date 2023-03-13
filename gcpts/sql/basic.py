@@ -88,7 +88,7 @@ class Query:
         if len(where) > 0:
             condition = " AND ".join(where)
             stmt += f" WHERE {condition}"
-        df = pd.read_gbq(stmt, project_id=self.project_id)
+        df = pd.read_gbq(stmt, project_id=self.project_id, use_bqstorage_api=True)
 
         df["dt"] = pd.to_datetime(df["dt"])
 
