@@ -7,7 +7,7 @@
 
 ## Installation
 ```
-pip install git+https://github.com/richwomanbtc/gcpts.git
+pip install gcpts
 ```
 
 ## Test
