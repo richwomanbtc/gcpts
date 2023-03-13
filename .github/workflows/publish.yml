@@ -16,5 +16,5 @@ jobs:
           version: "1.2.2"
       - name: Publish package
         run: |
-          poetry config pypi-token.pypi {{ secrets.PYPI_API_TOKEN }}
+          poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
           poetry publish --build
