@@ -15,6 +15,6 @@ jobs:
         with:
           version: "1.2.2"
       - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          poetry config pypi-token.pypi {{ secrets.PYPI_API_TOKEN }}
+          poetry publish --build
