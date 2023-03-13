@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="5" failures="0" skipped="0" tests="5" time="2.772" timestamp="2022-12-29T13:47:06.162923" hostname="fv-az198-346"><testcase classname="tests.test_gcpts" name="test_upload_and_create_table" time="0.412"><error message="failed on setup with &quot;google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  &quot;error&quot;: {\n    &quot;code&quot;: 403,\n    &quot;message&quot;: &quot;Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).&quot;,\n    &quot;status&quot;: &quot;PERMISSION_DENIED&quot;,\n    &quot;details&quot;: [\n      {\n        &quot;@type&quot;: &quot;type.googleapis.com/google.rpc.ErrorInfo&quot;,\n        &quot;reason&quot;: &quot;IAM_PERMISSION_DENIED&quot;,\n        &quot;domain&quot;: &quot;iam.googleapis.com&quot;,\n        &quot;metadata&quot;: {\n          &quot;permission&quot;: &quot;iam.serviceAccounts.getAccessToken&quot;\n        }\n      }\n    ]\n  }\n}\n')&quot;">@pytest.fixture(scope="session")
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="5" failures="0" skipped="0" tests="5" time="2.302" timestamp="2023-01-05T13:47:38.204327" hostname="fv-az194-605"><testcase classname="tests.test_gcpts" name="test_upload_and_create_table" time="0.248"><error message="failed on setup with &quot;google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  &quot;error&quot;: {\n    &quot;code&quot;: 403,\n    &quot;message&quot;: &quot;Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).&quot;,\n    &quot;status&quot;: &quot;PERMISSION_DENIED&quot;,\n    &quot;details&quot;: [\n      {\n        &quot;@type&quot;: &quot;type.googleapis.com/google.rpc.ErrorInfo&quot;,\n        &quot;reason&quot;: &quot;IAM_PERMISSION_DENIED&quot;,\n        &quot;domain&quot;: &quot;iam.googleapis.com&quot;,\n        &quot;metadata&quot;: {\n          &quot;permission&quot;: &quot;iam.serviceAccounts.getAccessToken&quot;\n        }\n      }\n    ]\n  }\n}\n')&quot;">@pytest.fixture(scope="session")
     def gcpts():
         project_id = os.environ["PROJECT_ID"]
         dataset_id = os.environ["DATASET_ID"]
@@ -28,9 +28,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = &lt;google.auth.transport.requests.Request object at 0x7f63c81a08e0&gt;
+request = &lt;google.auth.transport.requests.Request object at 0x7f10b0ee5cf0&gt;
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -103,9 +103,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = &lt;google.auth.transport.requests.Request object at 0x7f63c81a08e0&gt;
+request = &lt;google.auth.transport.requests.Request object at 0x7f10b0ee5cf0&gt;
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -178,9 +178,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = &lt;google.auth.transport.requests.Request object at 0x7f63c81a08e0&gt;
+request = &lt;google.auth.transport.requests.Request object at 0x7f10b0ee5cf0&gt;
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -253,9 +253,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = &lt;google.auth.transport.requests.Request object at 0x7f63c81a08e0&gt;
+request = &lt;google.auth.transport.requests.Request object at 0x7f10b0ee5cf0&gt;
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -298,7 +298,7 @@ iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/ser
 &gt;           raise exceptions.RefreshError(_REFRESH_ERROR, response_body)
 E           google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  "error": {\n    "code": 403,\n    "message": "Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).",\n    "status": "PERMISSION_DENIED",\n    "details": [\n      {\n        "@type": "type.googleapis.com/google.rpc.ErrorInfo",\n        "reason": "IAM_PERMISSION_DENIED",\n        "domain": "iam.googleapis.com",\n        "metadata": {\n          "permission": "iam.serviceAccounts.getAccessToken"\n        }\n      }\n    ]\n  }\n}\n')
 
-../../../.cache/pypoetry/virtualenvs/gcpts-dwi9FIXH-py3.10/lib/python3.10/site-packages/google/auth/impersonated_credentials.py:103: RefreshError</error></testcase><testcase classname="tests.test_gcpts" name="test_resample_query" time="0.002"><error message="failed on setup with &quot;google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  &quot;error&quot;: {\n    &quot;code&quot;: 403,\n    &quot;message&quot;: &quot;Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).&quot;,\n    &quot;status&quot;: &quot;PERMISSION_DENIED&quot;,\n    &quot;details&quot;: [\n      {\n        &quot;@type&quot;: &quot;type.googleapis.com/google.rpc.ErrorInfo&quot;,\n        &quot;reason&quot;: &quot;IAM_PERMISSION_DENIED&quot;,\n        &quot;domain&quot;: &quot;iam.googleapis.com&quot;,\n        &quot;metadata&quot;: {\n          &quot;permission&quot;: &quot;iam.serviceAccounts.getAccessToken&quot;\n        }\n      }\n    ]\n  }\n}\n')&quot;">@pytest.fixture(scope="session")
+../../../.cache/pypoetry/virtualenvs/gcpts-dwi9FIXH-py3.10/lib/python3.10/site-packages/google/auth/impersonated_credentials.py:103: RefreshError</error></testcase><testcase classname="tests.test_gcpts" name="test_resample_query" time="0.001"><error message="failed on setup with &quot;google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  &quot;error&quot;: {\n    &quot;code&quot;: 403,\n    &quot;message&quot;: &quot;Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).&quot;,\n    &quot;status&quot;: &quot;PERMISSION_DENIED&quot;,\n    &quot;details&quot;: [\n      {\n        &quot;@type&quot;: &quot;type.googleapis.com/google.rpc.ErrorInfo&quot;,\n        &quot;reason&quot;: &quot;IAM_PERMISSION_DENIED&quot;,\n        &quot;domain&quot;: &quot;iam.googleapis.com&quot;,\n        &quot;metadata&quot;: {\n          &quot;permission&quot;: &quot;iam.serviceAccounts.getAccessToken&quot;\n        }\n      }\n    ]\n  }\n}\n')&quot;">@pytest.fixture(scope="session")
     def gcpts():
         project_id = os.environ["PROJECT_ID"]
         dataset_id = os.environ["DATASET_ID"]
@@ -328,9 +328,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = &lt;google.auth.transport.requests.Request object at 0x7f63c81a08e0&gt;
+request = &lt;google.auth.transport.requests.Request object at 0x7f10b0ee5cf0&gt;
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 

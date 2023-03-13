@@ -39,9 +39,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = <google.auth.transport.requests.Request object at 0x7f63c81a08e0>
+request = <google.auth.transport.requests.Request object at 0x7f10b0ee5cf0>
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -117,9 +117,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = <google.auth.transport.requests.Request object at 0x7f63c81a08e0>
+request = <google.auth.transport.requests.Request object at 0x7f10b0ee5cf0>
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -195,9 +195,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = <google.auth.transport.requests.Request object at 0x7f63c81a08e0>
+request = <google.auth.transport.requests.Request object at 0x7f10b0ee5cf0>
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -273,9 +273,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = <google.auth.transport.requests.Request object at 0x7f63c81a08e0>
+request = <google.auth.transport.requests.Request object at 0x7f10b0ee5cf0>
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -351,9 +351,9 @@ gcpts/__init__.py:11: in __init__
     self.token, self.expiry = _make_iam_token_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = <google.auth.transport.requests.Request object at 0x7f63c81a08e0>
+request = <google.auth.transport.requests.Request object at 0x7f10b0ee5cf0>
 principal = 'github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com'
-headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjDKIhug5TUWhk3xI2VzY_1lk5Ov2ld6zfPnD0t-wy_........................................................................................................................'}
+headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ya29.d.b0AT7lpjC8NYIGmD4t1eNe6IavaG3ihzctZqzNVH6MAe9PsfF........................................................................................................................'}
 body = b'{"delegates": null, "scope": ["https://www.googleapis.com/auth/bigquery", "https://www.googleapis.com/auth/cloud-platform"], "lifetime": "3600s"}'
 iam_endpoint_override = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/github-gcpts-test@k2-depot-dev.iam.gserviceaccount.com:generateAccessToken'
 
@@ -418,4 +418,4 @@ ERROR tests/test_gcpts.py::test_upload - google.auth.exceptions.RefreshError: ('
 ERROR tests/test_gcpts.py::test_upload_two_times - google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  "error": {\n    "code": 403,\n    "message": "Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).",\n    "status": "PERMISSION_DENIED",\n    "details": [\n      {\n        "@type": "type.googleapis.com/google.rpc.ErrorInfo",\n        "reason": "IAM_PERMISSION_DENIED",\n        "domain": "iam.googleapis.com",\n        "metadata": {\n          "permission": "iam.serviceAccounts.getAccessToken"\n        }\n      }\n    ]\n  }\n}\n')
 ERROR tests/test_gcpts.py::test_basic_query - google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  "error": {\n    "code": 403,\n    "message": "Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).",\n    "status": "PERMISSION_DENIED",\n    "details": [\n      {\n        "@type": "type.googleapis.com/google.rpc.ErrorInfo",\n        "reason": "IAM_PERMISSION_DENIED",\n        "domain": "iam.googleapis.com",\n        "metadata": {\n          "permission": "iam.serviceAccounts.getAccessToken"\n        }\n      }\n    ]\n  }\n}\n')
 ERROR tests/test_gcpts.py::test_resample_query - google.auth.exceptions.RefreshError: ('Unable to acquire impersonated credentials', '{\n  "error": {\n    "code": 403,\n    "message": "Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).",\n    "status": "PERMISSION_DENIED",\n    "details": [\n      {\n        "@type": "type.googleapis.com/google.rpc.ErrorInfo",\n        "reason": "IAM_PERMISSION_DENIED",\n        "domain": "iam.googleapis.com",\n        "metadata": {\n          "permission": "iam.serviceAccounts.getAccessToken"\n        }\n      }\n    ]\n  }\n}\n')
-============================== 5 errors in 2.76s ===============================
+============================== 5 errors in 2.29s ===============================
