@@ -1,4 +1,4 @@
-from typing import Callable, Optional, List
+from typing import Callable, Optional, List, Union
 import pandas as pd
 from gcpts.protocol import GCPTSProtocol
 from gcpts.dt import (
@@ -14,7 +14,7 @@ def to_where(
     end_dt: Optional[str],
     partition_key: str = "partition_dt",
     partition_interval: str = "quarterly",
-    type: str = "DATETIME",
+    type: str = "TIMESTAMP",
     tz: Optional[str] = None,
 ):
     start_dt_offset_fn: Callable
@@ -60,14 +60,14 @@ class Query:
     def query(
         self: GCPTSProtocol,
         table_name: str,
-        field: str,
+        field: Union[str, List[str]],
         symbols: Optional[List[str]] = None,
         start_dt: Optional[str] = None,
         end_dt: Optional[str] = None,
         partition_key: str = "partition_dt",
         partition_interval: str = "quarterly",
-        type: str = "DATETIME",
-    ) -> pd.DataFrame:
+        type: str = "TIMESTAMP",
+    ) -> Union[pd.DataFrame, pd.Series]:
         where = to_where(
             start_dt=start_dt,
             end_dt=end_dt,
@@ -80,14 +80,19 @@ class Query:
             predicated = "'" + "','".join(symbols) + "'"
             where += [f"symbol in ({predicated})"]
         table_id = f"{self.project_id}.{self.dataset_id}.{table_name}"
-        stmt = f"SELECT {field}, symbol, dt FROM {table_id}"
+        if isinstance(field, str):
+            stmt = f"SELECT {field}, symbol, dt FROM {table_id}"
+        else:
+            stmt = f"SELECT {','.join(field)}, symbol, dt FROM {table_id}"
 
         if len(where) > 0:
             condition = " AND ".join(where)
             stmt += f" WHERE {condition}"
-
-        df = self.bq_client.query(stmt).to_dataframe()
+        df = pd.read_gbq(stmt, project_id=self.project_id)
 
         df["dt"] = pd.to_datetime(df["dt"])
 
-        return df.set_index(["dt", "symbol"])[field].unstack().sort_index()
+        if isinstance(field, str):
+            return df.set_index(["dt", "symbol"])[field].unstack().sort_index()
+        else:
+            return df.set_index(["dt", "symbol"])[field].sort_index()
