@@ -11,7 +11,7 @@ jobs:
   test:
     permissions:
       contents: "write"
-      id-token: "write"
+      id-token: "read"
     env:
       PROJECT_ID: ${{ secrets.PROJECT_ID }}
       DATASET_ID: ${{ secrets.DATASET_ID }}
@@ -20,9 +20,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -37,29 +34,11 @@ jobs:
         with:
           workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
-      - name: Run tests
-        run: poetry run pytest tests/ --cov --junitxml=./tests/pytest.xml --cov-report=term-missing:skip-covered | tee ./tests/pytest-coverage.txt
-      - name: Pytest coverage comment
-        id: coverageComment
-        uses: MishaKav/pytest-coverage-comment@main
-        with:
-          hide-comment: true
-          pytest-coverage-path: ./tests/pytest-coverage.txt
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Update Readme with Coverage Html
+      - name: Run pytest
         run: |
-          sed -i '/<!-- Pytest Coverage Comment:Begin -->/,/<!-- Pytest Coverage Comment:End -->/c\<!-- Pytest Coverage Comment:Begin -->\n\${{ steps.coverageComment.outputs.coverageHtml }}\n<!-- Pytest Coverage Comment:End -->' ./README.md
-
-      - name: Commit files
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add README.md ./tests/pytest.xml ./tests/pytest-coverage.txt
-          git commit -m "Update coverage on README.md"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+          poetry run pytest -s -vv --cov=./ --cov-report=xml
+      - uses: codecov/codecov-action@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
-
-    
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          verbose: true
