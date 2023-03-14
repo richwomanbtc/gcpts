@@ -146,9 +146,7 @@ class ResampleQuery:
         if verbose > 0:
             print(stmt)
 
-        execute_fn = self.bq_client.query
-
-        df = execute_fn(query=stmt).to_dataframe()
+        df = pd.read_gbq(stmt, project_id=self.project_id, use_bqstorage_api=True)
 
         df = df.set_index(["dt", "symbol"])["value"].unstack()
 
@@ -187,7 +185,7 @@ def _build_inner_view(
         end_dt,
         partition_key="partition_dt",
         partition_interval="monthly",
-        type="DATETIME",
+        type="TIMESTAMP",
         tz=tz,
     )
 

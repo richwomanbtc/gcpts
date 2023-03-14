@@ -1,3 +1,4 @@
+import uuid
 import pandas as pd
 import numpy as np
 import pytest
@@ -25,30 +26,28 @@ def bq_client(gcpts):
 
 @pytest.fixture(scope="session")
 def table_name():
-    yield "test_symbol"
+    yield "test_symbol" + uuid.uuid4().hex
 
 
 @pytest.fixture
 def df():
-    df = pd.DataFrame(
-        np.random.randn(5000, 4), columns=["open", "high", "low", "close"]
-    )
+    df = pd.DataFrame(np.random.randn(500, 4), columns=["open", "high", "low", "close"])
     df["symbol"] = "BTCUSDT"
-    df["dt"] = pd.date_range("2022-01-01", "2022-05-01", freq="15Min")[:5000]
-    df["partition_dt"] = df["dt"].dt.date.map(lambda x: x.replace(day=1)).astype(str)
+    df["dt"] = pd.date_range("2022-01-01", "2022-05-01", freq="15Min", tz="utc")[:500]
+    df["partition_dt"] = df["dt"].dt.date.astype(str)
     return df
 
 
 @pytest.fixture
 def df_vol():
     df_vol = pd.DataFrame(
-        np.random.randn(5000, 5), columns=["open", "high", "low", "close", "volume"]
+        np.random.randn(500, 5), columns=["open", "high", "low", "close", "volume"]
     )
     df_vol["symbol"] = "BTCUSDT"
-    df_vol["dt"] = pd.date_range("2022-05-01", "2022-10-01", freq="15Min")[:5000]
-    df_vol["partition_dt"] = (
-        df_vol["dt"].dt.date.map(lambda x: x.replace(day=1)).astype(str)
-    )
+    df_vol["dt"] = pd.date_range("2022-05-01", "2022-10-01", freq="15Min", tz="utc")[
+        :500
+    ]
+    df_vol["partition_dt"] = df_vol["dt"].dt.date.astype(str)
     return df_vol
 
 
@@ -79,7 +78,7 @@ def test_upload_and_create_table(gcpts, df, bq_client, table_name):
         .result()
         .to_dataframe()
     )
-    assert len(result_df) == 5000
+    assert len(result_df) == 500
     assert set(result_df.columns) == {
         "partition_dt",
         "dt",
@@ -92,7 +91,7 @@ def test_upload_and_create_table(gcpts, df, bq_client, table_name):
 
     assert set(table.schema) == {
         bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),
-        bigquery.SchemaField("dt", "DATETIME", mode="NULLABLE"),
+        bigquery.SchemaField("dt", "TIMESTAMP", mode="NULLABLE"),
         bigquery.SchemaField("symbol", "STRING", mode="NULLABLE"),
         bigquery.SchemaField("open", "FLOAT", mode="NULLABLE"),
         bigquery.SchemaField("high", "FLOAT", mode="NULLABLE"),
@@ -110,7 +109,7 @@ def test_upload(gcpts, df, df_vol, bq_client, table_name):
     table = bq_client.get_table(f"{gcpts.project_id}.{gcpts.dataset_id}.{table_name}")
     assert set(table.schema) == {
         bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),
-        bigquery.SchemaField("dt", "DATETIME", mode="NULLABLE"),
+        bigquery.SchemaField("dt", "TIMESTAMP", mode="NULLABLE"),
         bigquery.SchemaField("symbol", "STRING", mode="NULLABLE"),
         bigquery.SchemaField("open", "FLOAT", mode="NULLABLE"),
         bigquery.SchemaField("high", "FLOAT", mode="NULLABLE"),
@@ -125,7 +124,7 @@ def test_upload(gcpts, df, df_vol, bq_client, table_name):
         .result()
         .to_dataframe()
     )
-    assert len(result_df) == 10000
+    assert len(result_df) == 500 * 2
     assert set(result_df.columns) == {
         "partition_dt",
         "dt",
@@ -153,7 +152,7 @@ def test_upload_two_times(gcpts, df, df_vol, bq_client, table_name):
         .result()
         .to_dataframe()
     )
-    assert len(result_df) == 10000
+    assert len(result_df) == 500 * 2
     assert set(result_df.columns) == {
         "partition_dt",
         "dt",
@@ -179,7 +178,7 @@ def test_basic_query(gcpts, df, df_vol, table_name):
     )
 
     expected_df = (
-        df.set_index([pd.to_datetime(df["dt"]), "symbol"])
+        df.set_index([pd.to_datetime(df["dt"], utc=True), "symbol"])
         .sort_index()["open"]
         .unstack()
         .loc[pd.IndexSlice["2022-01-01 00:00:00":"2022-01-15 23:59:59", :]]
@@ -199,6 +198,28 @@ def test_basic_query(gcpts, df, df_vol, table_name):
     assert result_df.isna().sum().sum() == len(result_df)
 
 
+def test_list_field_query(gcpts, df, df_vol, table_name):
+    gcpts.upload(table_name, df)
+    gcpts.upload(table_name, df_vol)
+
+    result_df = gcpts.query(
+        table_name,
+        ["open", "close"],
+        symbols=["BTCUSDT"],
+        start_dt="2022-01-01 00:00:00",  # yyyy-mm-dd HH:MM:SS, inclusive
+        end_dt="2022-01-15 23:59:59",  # yyyy-mm-dd HH:MM:SS, inclusive
+    )
+
+    expected_df = (
+        df.set_index([pd.to_datetime(df["dt"], utc=True), "symbol"])
+        .sort_index()[["open", "close"]]
+        .loc[pd.IndexSlice["2022-01-01 00:00:00":"2022-01-15 23:59:59", :]]
+    )
+    print(result_df)
+    print(expected_df)
+    pd.testing.assert_frame_equal(result_df, expected_df)
+
+
 def test_resample_query(gcpts, df, df_vol, table_name):
     gcpts.upload(table_name, df)
     gcpts.upload(table_name, df_vol)
@@ -214,7 +235,7 @@ def test_resample_query(gcpts, df, df_vol, table_name):
     )
 
     expected_df = (
-        df.set_index([pd.to_datetime(df["dt"]), "symbol"])
+        df.set_index([pd.to_datetime(df["dt"], utc=True), "symbol"])
         .sort_index()["close"]
         .unstack()
         .loc[pd.IndexSlice["2022-01-01 00:00:00":"2022-01-15 23:59:59", :]]

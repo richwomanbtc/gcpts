@@ -1,3 +1,4 @@
+import io
 from typing import Dict
 from typing import Optional
 import pandas as pd
@@ -12,8 +13,8 @@ def upsert_table(
     dtypes: Optional[Dict[str, str]] = None,
 ) -> None:
     _dtypes = {
-        "partition_dt": "datetime64[ns]",
-        "dt": "datetime64[ns]",
+        "partition_dt": "datetime64[ns, UTC]",
+        "dt": "datetime64[ns, UTC]",
         "symbol": "string",
     }
 
@@ -34,17 +35,28 @@ def upsert_table(
         write_disposition="WRITE_TRUNCATE",
         schema_update_options=["ALLOW_FIELD_ADDITION", "ALLOW_FIELD_RELAXATION"],
         time_partitioning=bigquery.TimePartitioning(
-            type_=bigquery.TimePartitioningType.DAY, field="partition_dt"
+            type_=bigquery.TimePartitioningType.DAY,
+            field="partition_dt",
         ),
+        source_format=bigquery.SourceFormat.CSV,
     )
     dates = df["partition_dt"].unique()
 
+    jobs = []
     for date in dates:
         partition_table_id = f"{table_id}${date.strftime('%Y%m%d')}"
         part_df = df.loc[df["partition_dt"] == date]
-        job = self.bq_client.load_table_from_dataframe(
-            part_df, partition_table_id, job_config=job_config
+        b_buf = io.BytesIO()
+        part_df.to_csv(b_buf, index=False)
+        b_buf.seek(0)
+        jobs.append(
+            self.bq_client.load_table_from_file(
+                b_buf,
+                partition_table_id,
+                job_config=job_config,
+            )
         )
+    for job in jobs:
         print(job.result())
 
 
