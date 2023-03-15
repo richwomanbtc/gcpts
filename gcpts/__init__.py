@@ -3,7 +3,7 @@ from gcpts.sql.basic import Query
 from gcpts.sql.resample import ResampleQuery
 from google.cloud import bigquery
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 class GCPTS(Query, ResampleQuery, Uploader):
