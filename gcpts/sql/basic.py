@@ -39,7 +39,7 @@ def to_where(
         _start_dt = start_dt_offset_fn(_start_dt)
 
         where += [
-            f"{partition_key} >= CAST('{_start_dt:%Y-%m-%d}' AS DATE)",
+            f"{partition_key} >= CAST('{_start_dt:%Y-%m-%d}' AS TIMESTAMP)",
             f"dt >= CAST('{start_dt}' AS {type})",
         ]
 
@@ -50,7 +50,7 @@ def to_where(
         _end_dt = end_dt_offset_fn(_end_dt)
 
         where += [
-            f"{partition_key} <= CAST('{_end_dt:%Y-%m-%d}' AS DATE)",
+            f"{partition_key} <= CAST('{_end_dt:%Y-%m-%d}' AS TIMESTAMP)",
             f"dt <= CAST('{end_dt}' AS {type})",
         ]
     return where
