@@ -90,7 +90,7 @@ def test_upload_and_create_table(gcpts, df, bq_client, table_name):
     }
 
     assert set(table.schema) == {
-        bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),
+        bigquery.SchemaField("partition_dt", "TIMESTAMP", mode="NULLABLE"),
         bigquery.SchemaField("dt", "TIMESTAMP", mode="NULLABLE"),
         bigquery.SchemaField("symbol", "STRING", mode="NULLABLE"),
         bigquery.SchemaField("open", "FLOAT", mode="NULLABLE"),
@@ -108,7 +108,7 @@ def test_upload(gcpts, df, df_vol, bq_client, table_name):
 
     table = bq_client.get_table(f"{gcpts.project_id}.{gcpts.dataset_id}.{table_name}")
     assert set(table.schema) == {
-        bigquery.SchemaField("partition_dt", "DATE", mode="NULLABLE"),
+        bigquery.SchemaField("partition_dt", "TIMESTAMP", mode="NULLABLE"),
         bigquery.SchemaField("dt", "TIMESTAMP", mode="NULLABLE"),
         bigquery.SchemaField("symbol", "STRING", mode="NULLABLE"),
         bigquery.SchemaField("open", "FLOAT", mode="NULLABLE"),
